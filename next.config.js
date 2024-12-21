@@ -7,14 +7,13 @@ const nextConfig = {
         port: '',        
       },],
   },
-  webpack: (config) => {
-    config.module.rules.push({
-      test: /\.node/,
-      use: 'raw-loader',
-    });
- 
-    return config;
-  },
+  target: "serverless",
+  future: { webpack5: true },
+  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
+      config.resolve.alias.canvas = false
+      config.resolve.alias.encoding = false
+      return config
+  }
 };
 
 module.exports = nextConfig;
