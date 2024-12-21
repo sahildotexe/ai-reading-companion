@@ -59,6 +59,21 @@ export default function BookPage() {
   // Add new state for chat history
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
 
+  const [showApiKeyModal, setShowApiKeyModal] = useState(false);
+
+  useEffect(() => {
+    // Check for OpenAI API key in localStorage
+    const apiKey = localStorage.getItem('openai_key');
+    if (!apiKey) {
+      setShowApiKeyModal(true);
+    }
+  }, []);
+
+  const handleApiKeySubmit = (key: string) => {
+    localStorage.setItem('openai_key', key);
+    setShowApiKeyModal(false);
+  };
+
   const handleTextSelection = () => {
     const selectedText = window.getSelection()?.toString();
     if (selectedText) {
@@ -177,7 +192,7 @@ export default function BookPage() {
     const bodyObj = {
       user_id: user?.id,
       query: text,
-      api_key: process.env.NEXT_PUBLIC_API_KEY
+      api_key: localStorage.getItem('openai_key')
     }
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v1/ai-reader/converse-with-pdf`, {   
@@ -372,6 +387,33 @@ export default function BookPage() {
         </div>
       )}
       <audio ref={audioRef} onEnded={() => setIsPlaying(false)} style={{ display: 'none' }} />
+
+      {showApiKeyModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+            <h2 className="text-xl font-semibold mb-4">Enter OpenAI API Key</h2>
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              const key = (e.target as HTMLFormElement).apiKey.value;
+              handleApiKeySubmit(key);
+            }}>
+              <input
+                type="password"
+                name="apiKey"
+                placeholder="sk-..."
+                className="w-full p-2 border border-gray-300 rounded mb-4"
+                required
+              />
+              <button
+                type="submit"
+                className="w-full bg-[#131316] text-white py-2 rounded hover:bg-opacity-90"
+              >
+                Save API Key
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </main>
   );
 } 

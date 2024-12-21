@@ -2,11 +2,35 @@
 import { UserButton, SignOutButton } from "@clerk/nextjs";
 import Card from "../components/Card";
 import Navbar from "../components/Navbar";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+
 export default function DashboardPage() {
-  
-const handleCreateNewBook = () => {
+  const [cards, setCards] = useState<any[]>([]);
+  const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    // Check for stored cards
+    const storedCards = localStorage.getItem('cards');
+    if (storedCards) {
+      setCards(JSON.parse(storedCards));
+    }
+
+    // Check for OpenAI key
+    const openAiKey = localStorage.getItem('openai_key');
+    if (!openAiKey) {
+      setShowModal(true);
+    }
+  }, []);
+
+  const handleSaveApiKey = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const apiKey = (form.elements.namedItem('apiKey') as HTMLInputElement).value;
+    localStorage.setItem('openai_key', apiKey);
+    setShowModal(false);
+  };
+
+  const handleCreateNewBook = () => {
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.accept = '.pdf,.epub,.txt';
@@ -33,17 +57,6 @@ const handleCreateNewBook = () => {
       }
     };
   };
-
-  const [cards, setCards] = useState<any[]>([]);
-
-  useEffect(() => {
-    const storedCards = localStorage.getItem('cards');
-    if (storedCards) {
-      setCards(JSON.parse(storedCards));
-    }
-  }, []);
-
-  
 
   return (
     <>
@@ -72,6 +85,30 @@ const handleCreateNewBook = () => {
           </div>
         </div>
       </main>
+
+      {/* API Key Modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-8 rounded-lg max-w-md w-full">
+            <h2 className="text-2xl font-semibold mb-4">Enter OpenAI API Key</h2>
+            <form onSubmit={handleSaveApiKey}>
+              <input
+                type="password"
+                name="apiKey"
+                placeholder="sk-..."
+                className="w-full p-2 border rounded mb-4"
+                required
+              />
+              <button
+                type="submit"
+                className="w-full px-4 py-2 bg-[#131316] text-white rounded"
+              >
+                Save API Key
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </>
   );
 }
