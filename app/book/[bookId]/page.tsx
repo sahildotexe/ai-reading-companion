@@ -3,6 +3,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import Navbar from '@/app/components/Navbar';
 import { Viewer, Worker } from '@react-pdf-viewer/core';
+import { useUser } from '@clerk/nextjs';
 
 // Plugins
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
@@ -53,6 +54,7 @@ export default function BookPage() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { user } = useUser();
 
   // Add new state for chat history
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
@@ -173,11 +175,11 @@ export default function BookPage() {
     setChatHistory(prev => [...prev, { type: 'user', content: text }]);
 
     const bodyObj = {
-      user_id: "1",
+      user_id: user?.id,
       query: text
     }
 
-    const response = await fetch('http://localhost:8000/v1/ai-reader/converse-with-pdf', {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v1/ai-reader/converse-with-pdf`, {   
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
