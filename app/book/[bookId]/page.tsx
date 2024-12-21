@@ -260,7 +260,7 @@ export default function BookPage() {
       <Navbar />
       <div className="w-full mt-8 flex flex-col items-center">
         <div style={{ width: '100%', height: '80vh' }}>
-          <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js">
+          <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${process.env.NEXT_PUBLIC_PDFJS_VERSION}/build/pdf.worker.min.js`}>
             <Viewer
               fileUrl="/book.pdf"
               plugins={[
