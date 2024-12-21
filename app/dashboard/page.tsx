@@ -2,8 +2,6 @@
 import { UserButton, SignOutButton } from "@clerk/nextjs";
 import Card from "../components/Card";
 import Navbar from "../components/Navbar";
-import jsPDF from "jspdf";
-
 export default function DashboardPage() {
   
   const handleCreateNewBook = () => {
