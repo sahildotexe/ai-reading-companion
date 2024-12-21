@@ -262,7 +262,7 @@ export default function BookPage() {
         <div style={{ width: '100%', height: '80vh' }}>
           <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${process.env.NEXT_PUBLIC_PDFJS_VERSION}/build/pdf.worker.min.js`}>
             <Viewer
-              fileUrl="/book.pdf"
+              fileUrl={`/${params.bookId}.pdf`}
               plugins={[
                 defaultLayoutPluginInstance,
               ]}
