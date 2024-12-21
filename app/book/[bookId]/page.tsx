@@ -176,7 +176,8 @@ export default function BookPage() {
 
     const bodyObj = {
       user_id: user?.id,
-      query: text
+      query: text,
+      api_key: process.env.NEXT_PUBLIC_API_KEY
     }
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v1/ai-reader/converse-with-pdf`, {   
