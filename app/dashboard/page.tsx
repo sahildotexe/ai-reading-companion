@@ -50,7 +50,7 @@ const handleCreateNewBook = () => {
       <main className="max-w-[85rem] w-full mx-auto">
         <Navbar />
         <div className="mt-[6rem] mx-8" >
-          <h1 className="text-4xl font-semibold ">Welcome to MindScape</h1>
+          <h1 className="text-4xl font-semibold">Welcome to MindScape</h1>
           <p className="mt-8 text-2xl text-gray-500">My Books</p>
           <hr className="mt-2 border-t border-gray-200" />
         </div>
