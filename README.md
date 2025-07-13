@@ -1,5 +1,2 @@
 # AI Reading Companion
 
-
-
-
